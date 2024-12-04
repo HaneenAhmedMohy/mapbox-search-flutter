@@ -12,7 +12,8 @@ class MapBoxPlaceSearchWidget extends StatefulWidget {
       this.popOnSelect = false,
       this.location,
       this.country,
-      this.width});
+      this.width,
+      this.searchBoxHeight});
 
   /// True if there is different search screen and you want to pop screen on select
   final bool popOnSelect;
@@ -46,6 +47,7 @@ class MapBoxPlaceSearchWidget extends StatefulWidget {
   ///Font Size
   final String? fontSize;
   final double? width;
+  final double? searchBoxHeight;
 
   @override
   _MapBoxPlaceSearchWidgetState createState() => _MapBoxPlaceSearchWidgetState();
@@ -71,7 +73,7 @@ class _MapBoxPlaceSearchWidgetState extends State<MapBoxPlaceSearchWidget> with 
   void initState() {
     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _containerHeight =
-        Tween<double>(begin: 60, end: widget.height ?? MediaQuery.of(widget.context!).size.height - 60 ?? 300).animate(
+        Tween<double>(begin: widget.searchBoxHeight, end: widget.height ?? MediaQuery.of(widget.context!).size.height - 60 ?? 300).animate(
       CurvedAnimation(
         curve: Interval(0.0, 0.5, curve: Curves.easeInOut),
         parent: _animationController!,
