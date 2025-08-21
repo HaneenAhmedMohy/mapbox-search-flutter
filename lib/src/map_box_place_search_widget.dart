@@ -73,7 +73,8 @@ class _MapBoxPlaceSearchWidgetState extends State<MapBoxPlaceSearchWidget> with 
   void initState() {
     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _containerHeight =
-        Tween<double>(begin: widget.searchBoxHeight, end: widget.height ?? MediaQuery.of(widget.context!).size.height - 60 ?? 300).animate(
+        Tween<double>(begin: widget.searchBoxHeight, end: widget.height ?? MediaQuery.of(widget.context!).size.height - 60 ?? 300)
+            .animate(
       CurvedAnimation(
         curve: Interval(0.0, 0.5, curve: Curves.easeInOut),
         parent: _animationController!,
@@ -227,19 +228,23 @@ class _MapBoxPlaceSearchWidgetState extends State<MapBoxPlaceSearchWidget> with 
     /// Api and giving the user Place options
     ///
     if (input.length > 0) {
-      var placesSearch = PlacesSearch(
+      var placesSearch = GeoCodingApi(
         apiKey: widget.apiKey,
         country: widget.country,
       );
-
+      if (widget.location == null) {
+        return;
+      }
       final predictions = await placesSearch.getPlaces(
         input,
-        location: widget.location,
+        proximity: Proximity.Location(widget.location!),
       );
 
       await _animationController!.animateTo(0.5);
 
-      setState(() => _placePredictions = predictions);
+      if (predictions.success != null) {
+        setState(() => _placePredictions = predictions.success);
+      }
 
       await _animationController!.forward();
     } else {
