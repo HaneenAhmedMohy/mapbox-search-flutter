@@ -228,10 +228,17 @@ class _MapBoxPlaceSearchWidgetState extends State<MapBoxPlaceSearchWidget> with 
     /// Api and giving the user Place options
     ///
     if (input.length > 0) {
-      var placesSearch = GeoCodingApi(
-        apiKey: widget.apiKey,
-        country: widget.country,
-      );
+      var placesSearch = GeoCodingApi(apiKey: widget.apiKey, country: widget.country, types: [
+        PlaceType.address, // exact addresses if user types one
+        PlaceType.place, // towns/cities
+        PlaceType.locality, // districts
+        PlaceType.neighborhood,
+        PlaceType.country,
+        PlaceType.district,
+        PlaceType.postcode,
+        PlaceType.region,
+        PlaceType.poi, // malls, mosques, restaurants, etc.
+      ]);
       if (widget.location == null) {
         return;
       }
@@ -245,6 +252,7 @@ class _MapBoxPlaceSearchWidgetState extends State<MapBoxPlaceSearchWidget> with 
       if (predictions.success != null) {
         setState(() => _placePredictions = predictions.success);
       }
+      // setState(() => _placePredictions = predictions.success);
 
       await _animationController!.forward();
     } else {
